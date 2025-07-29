@@ -26,4 +26,4 @@ $ git clone https://github.com/gabrieruu/tnote
 $ pip install <path to tnote folder>
 ```
 
-You should now be able to use the command `note`.
+You should now be able to use the command `tnote`.
