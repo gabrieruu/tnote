@@ -28,4 +28,3 @@ class ListCommand(CommandRegistry):
         selected_reference = pyfzf.prompt(reference_list)
 
         print(data[selected_reference[0]])
-

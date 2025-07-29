@@ -14,12 +14,13 @@ class AddCommand(CommandRegistry):
         }
 
     def add_reference(self, args):
-        tool_file_path = Path(get_setting("Settings", "data_path")) / args.tool
+        tool_file_path = Path(get_setting("Settings", "data_path")) / f'{args.tool}.json'
 
         if not os.path.exists(tool_file_path):
             print(
                 f'error: tool {args.tool} doesn\'t exist, run "tnote tool add -n <toolname>" first to create the tool file'
             )
+            print(tool_file_path)
             return
 
         with open(tool_file_path, "r") as file_handler:

@@ -1,6 +1,6 @@
 Makefile
 requirements.txt
-tests/
+sandbox/
 tnote.egg-info
 __pycache__
 old_*
