@@ -1,0 +1,6 @@
+Makefile
+requirements.txt
+tests/
+tnote.egg-info
+__pycache__
+old_*
