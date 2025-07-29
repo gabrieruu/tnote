@@ -4,3 +4,4 @@ tests/
 tnote.egg-info
 __pycache__
 old_*
+todos.json

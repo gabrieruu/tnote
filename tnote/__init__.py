@@ -15,13 +15,10 @@ CLI_CONFIG = {
             ("-c", "--content"),
         ],
     },
-    "list": {"tool": [], "reference": []},
+    "list": {},
     "remove": {
-        "tool": [("-n", "--name")],
-        "reference": [
-            ("-t", "--tool"),
-            ("-n", "--name"),
-        ],
+        "tool": [],
+        "reference": [],
     },
 }
 
