@@ -14,7 +14,9 @@ class AddCommand(CommandRegistry):
         }
 
     def add_reference(self, args):
-        tool_file_path = Path(get_setting("Settings", "data_path")) / f'{args.tool}.json'
+        tool_file_path = (
+            Path(get_setting("Settings", "data_path")) / f"{args.tool}.json"
+        )
 
         if not os.path.exists(tool_file_path):
             print(
@@ -34,7 +36,9 @@ class AddCommand(CommandRegistry):
             file_handler.close()
 
     def add_tool(self, args):
-        tool_file_path = Path(get_setting("Settings", "data_path")) / f'{args.name}.json'
+        tool_file_path = (
+            Path(get_setting("Settings", "data_path")) / f"{args.name}.json"
+        )
 
         if os.path.exists(tool_file_path):
             print(f"error: tool {args.name} already exists")

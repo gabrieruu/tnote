@@ -22,7 +22,7 @@ class RemoveCommand(CommandRegistry):
         tool_list = [tool.replace(".json", "") for tool in tool_list]
 
         selected_tool = pyfzf.prompt(tool_list)
-        tool_file_path = Path(data_path) / f'{selected_tool[0]}.json'
+        tool_file_path = Path(data_path) / f"{selected_tool[0]}.json"
 
         if os.path.exists(tool_file_path):
             answer = input(
@@ -39,7 +39,7 @@ class RemoveCommand(CommandRegistry):
         tool_list = [tool.replace(".json", "") for tool in tool_list]
 
         selected_tool = pyfzf.prompt(tool_list)
-        tool_file_path = Path(data_path) / f'{selected_tool[0]}.json'
+        tool_file_path = Path(data_path) / f"{selected_tool[0]}.json"
 
         with open(tool_file_path, "r") as file_handler:
             data = json.load(file_handler)

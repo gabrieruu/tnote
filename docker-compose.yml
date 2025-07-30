@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tnote-dev
+    volumes:
+      - .:/home/dev/tnote
+    working_dir: /home/dev/tnote
+    user: dev
+    tty: true
+    stdin_open: true 
+    command: >
+      bash -c "export PATH=\$PATH:/home/dev/.local/bin &&
+               pip install --user -e . &&
+               exec bash"
