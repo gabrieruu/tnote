@@ -31,6 +31,8 @@ def main():
     command = CommandRegistry.registry.get(args.command)
     if command:
         command.run(args)
+    else:
+        parser.print_help()
 
 
 if __name__ == "__main__":
