@@ -1,12 +1,10 @@
-from pathlib import Path
 import os
 import json
 
-from tnote.registry import CommandRegistry
-from tnote.config import get_setting
+from tnote.registry import BaseCommand
 
 
-class AddCommand(CommandRegistry):
+class AddCommand(BaseCommand):
     def __init__(self):
         self.subcommand_registry = {
             "reference": self.add_reference,
@@ -14,39 +12,34 @@ class AddCommand(CommandRegistry):
         }
 
     def add_reference(self, args):
-        tool_file_path = (
-            Path(get_setting("Settings", "data_path")) / f"{args.tool}.json"
-        )
-
-        if not os.path.exists(tool_file_path):
+        if not os.path.exists(self.tool_file):
             print(
                 f'error: tool {args.tool} doesn\'t exist, run "tnote tool add -n <toolname>" first to create the tool file'
             )
-            print(tool_file_path)
             return
 
-        with open(tool_file_path, "r") as file_handler:
+        with open(self.tool_file, "r") as file_handler:
             data = json.load(file_handler)
             file_handler.close()
 
         data[args.name] = args.content
 
-        with open(tool_file_path, "w") as file_handler:
+        with open(self.tool_file, "w") as file_handler:
             json.dump(data, file_handler, indent=4)
             file_handler.close()
 
     def add_tool(self, args):
-        tool_file_path = (
-            Path(get_setting("Settings", "data_path")) / f"{args.name}.json"
-        )
-
-        if os.path.exists(tool_file_path):
+        if os.path.exists(self.tool_file):
             print(f"error: tool {args.name} already exists")
             return
 
-        with open(tool_file_path, "w") as file_handler:
+        with open(self.tool_file, "w") as file_handler:
             file_handler.write(json.dumps({}))
             file_handler.close()
 
     def run(self, args):
+        if hasattr(args, "tool"):
+            self.tool_file = self.get_tool_file_path(args.tool)
+        else:
+            self.tool_file = self.get_tool_file_path(args.name)
         self.subcommand_registry[args.subcommand](args)

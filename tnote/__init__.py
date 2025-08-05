@@ -1,6 +1,6 @@
 from tnote.config import init_config
 from tnote.parser import Parser
-from tnote.registry import CommandRegistry
+from tnote.registry import BaseCommand
 import tnote.commands
 import sys
 
@@ -28,7 +28,7 @@ def main():
     parser = Parser(CLI_CONFIG)
     args = parser.parse_args()
 
-    command = CommandRegistry.registry.get(args.command)
+    command = BaseCommand.registry.get(args.command)
     if command:
         command.run(args)
     else:

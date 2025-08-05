@@ -1,27 +1,24 @@
-from tnote.registry import CommandRegistry
-from tnote.config import get_setting
+from tnote.registry import BaseCommand
 
 import os
 import json
 from pyfzf import FzfPrompt
-from pathlib import Path
 
 
-class ListCommand(CommandRegistry):
+class ListCommand(BaseCommand):
     def __init__(self) -> None:
         pass
 
     def run(self, args):
         pyfzf = FzfPrompt()
-        data_path = get_setting("Settings", "data_path")
 
-        tool_list = os.listdir(data_path)
+        tool_list = os.listdir(self.data_path)
         tool_list = [tool.replace(".json", "") for tool in tool_list]
 
         selected_tool = pyfzf.prompt(tool_list)
-        tool_file_path = Path(data_path) / f"{selected_tool[0]}.json"
+        tool_file = self.get_tool_file_path(selected_tool[0])
 
-        with open(tool_file_path, "r") as file_handler:
+        with open(tool_file, "r") as file_handler:
             data = json.load(file_handler)
             file_handler.close()
 

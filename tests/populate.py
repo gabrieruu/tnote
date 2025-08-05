@@ -3,9 +3,9 @@ from types import SimpleNamespace
 from tnote.commands import add
 from tnote.commands import list
 from tnote.commands import remove
-from tnote.registry import CommandRegistry
+from tnote.registry import BaseCommand
 
-command = CommandRegistry.registry.get("add")
+command = BaseCommand.registry.get("add")
 
 populate_tools = ["nvim", "python", "osx", "iterm"]
 populate_references = {
@@ -19,5 +19,7 @@ for tool in populate_tools:
     command.run(args)
 
     for name, content in populate_references.items():
-        args = SimpleNamespace(command="add", subcommand="reference", tool=tool, name=name, content=content)
+        args = SimpleNamespace(
+            command="add", subcommand="reference", tool=tool, name=name, content=content
+        )
         command.run(args)
