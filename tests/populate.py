@@ -3,7 +3,7 @@ from types import SimpleNamespace
 from tnote.commands import add
 from tnote.commands import list
 from tnote.commands import remove
-from tnote.registry import BaseCommand
+from tnote.commands.base import BaseCommand
 
 command = BaseCommand.registry.get("add")
 

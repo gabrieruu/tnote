@@ -1,4 +1,4 @@
-from tnote.registry import BaseCommand
+from tnote.commands.base import BaseCommand
 
 import os
 import json
@@ -7,20 +7,20 @@ from pyfzf import FzfPrompt
 
 class RemoveCommand(BaseCommand):
     def __init__(self):
-        self.subcommand_registry = {
-            "tool": self.remove_tool,
-            "reference": self.remove_reference,
+        self._subcommand_registry = {
+            "tool": self._remove_tool,
+            "reference": self._remove_reference,
         }
 
         self.pyfzf = FzfPrompt()
 
-    def get_selected_tool_path(self):
-        selected_tool = self.pyfzf.prompt(self.tool_list)
-        tool_file_path = self.get_tool_file_path(selected_tool[0])
-        return tool_file_path
+    def _get_selected_tool_path(self):
+        selected_tool = self.pyfzf.prompt(self._tool_list)
+        tool_file = self._get_tool_file_path(selected_tool[0])
+        return tool_file
 
-    def remove_tool(self, args):
-        tool_file = self.get_selected_tool_path()
+    def _remove_tool(self, args):
+        tool_file = self._get_selected_tool_path()
 
         if os.path.exists(tool_file):
             answer = input(
@@ -29,8 +29,8 @@ class RemoveCommand(BaseCommand):
             if answer == "yes":
                 os.remove(tool_file)
 
-    def remove_reference(self, args):
-        tool_file = self.get_selected_tool_path()
+    def _remove_reference(self, args):
+        tool_file = self._get_selected_tool_path()
 
         with open(tool_file, "r") as file_handler:
             data = json.load(file_handler)
@@ -50,6 +50,6 @@ class RemoveCommand(BaseCommand):
                 file_handler.close()
 
     def run(self, args):
-        self.tool_list = os.listdir(self.data_path)
-        self.tool_list = [tool.replace(".json", "") for tool in self.tool_list]
-        self.subcommand_registry[args.subcommand](args)
+        self._tool_list = os.listdir(self._data_path)
+        self._tool_list = [tool.replace(".json", "") for tool in self._tool_list]
+        self._subcommand_registry[args.subcommand](args)

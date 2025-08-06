@@ -1,6 +1,6 @@
 from tnote.config import init_config
 from tnote.parser import Parser
-from tnote.registry import BaseCommand
+from tnote.commands.base import BaseCommand
 import tnote.commands
 import sys
 

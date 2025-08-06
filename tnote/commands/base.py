@@ -9,9 +9,9 @@ class BaseCommand:
         name = cls.__name__.lower().replace("command", "")
         cls.registry[name] = cls()
 
-        cls.data_path = get_setting("Settings", "data_path")
+        cls._data_path = get_setting("Settings", "data_path")
 
     @classmethod
-    def get_tool_file_path(cls, tool_name):
-        tool_file_path = Path(cls.data_path) / f"{tool_name}.json"
+    def _get_tool_file_path(cls, tool_name):
+        tool_file_path = Path(cls._data_path) / f"{tool_name}.json"
         return tool_file_path

@@ -1,4 +1,4 @@
-from tnote.registry import BaseCommand
+from tnote.commands.base import BaseCommand
 
 import os
 import json
@@ -12,11 +12,11 @@ class ListCommand(BaseCommand):
     def run(self, args):
         pyfzf = FzfPrompt()
 
-        tool_list = os.listdir(self.data_path)
+        tool_list = os.listdir(self._data_path)
         tool_list = [tool.replace(".json", "") for tool in tool_list]
 
         selected_tool = pyfzf.prompt(tool_list)
-        tool_file = self.get_tool_file_path(selected_tool[0])
+        tool_file = self._get_tool_file_path(selected_tool[0])
 
         with open(tool_file, "r") as file_handler:
             data = json.load(file_handler)
