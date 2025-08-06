@@ -1,5 +1,6 @@
 import os
 import json
+import sys
 
 from tnote.commands.base import BaseCommand
 
@@ -14,9 +15,9 @@ class AddCommand(BaseCommand):
     def _add_reference(self, args):
         if not os.path.exists(self._tool_file):
             print(
-                f'error: tool {args.tool} doesn\'t exist, run "tnote tool add -n <toolname>" first to create the tool file'
+                f"E: Tool '{args.tool}' does not exist. Please run:\n  tnote tool add -n <toolname>\nto create the tool file first."
             )
-            return
+            sys.exit()
 
         with open(self._tool_file, "r") as file_handler:
             data = json.load(file_handler)
@@ -30,8 +31,8 @@ class AddCommand(BaseCommand):
 
     def _add_tool(self, args):
         if os.path.exists(self._tool_file):
-            print(f"error: tool {args.name} already exists")
-            return
+            print(f"E: Tool {args.name} already exists.")
+            sys.exit()
 
         with open(self._tool_file, "w") as file_handler:
             file_handler.write(json.dumps({}))

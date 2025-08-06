@@ -26,12 +26,24 @@ class RemoveCommand(BaseCommand):
     def _remove_tool(self, args):
         tool_file = self._get_selected_tool_path()
 
-        if os.path.exists(tool_file):
-            answer = input(
-                f'You are going to delete tool file "{tool_file}", are you sure?(yes)(no): '
-            )
-            if answer == "yes":
-                os.remove(tool_file)
+        while True:
+            if os.path.exists(tool_file):
+                answer = (
+                    input(
+                        f'You are about to delete tool file "{tool_file}".\nDo you want to continue? [Y/n] '
+                    )
+                    .strip()
+                    .lower()
+                )
+                if answer in ("", "y", "yes"):
+                    os.remove(tool_file)
+                    print("Tool file deleted.")
+                    break
+                elif answer in ("n", "no"):
+                    print("Operation cancelled.")
+                    break
+                else:
+                    print("Please answer with 'yes', 'no', 'y', or 'n'.")
 
     def _remove_reference(self, args):
         tool_file = self._get_selected_tool_path()
@@ -45,15 +57,28 @@ class RemoveCommand(BaseCommand):
         if not selected_reference:
             sys.exit()
 
-        answer = input(
-            f"You are going to delete reference title {selected_reference} in tool file {tool_file}, are you sure?(yes)(no): "
-        )
-        if answer == "yes":
-            del data[selected_reference[0]]
+        while True:
+            answer = (
+                input(
+                    f"You are about to delete reference title '{selected_reference}' in tool file '{tool_file}'.\nDo you want to continue? [Y/n] "
+                )
+                .strip()
+                .lower()
+            )
+            if answer in ("", "y", "yes"):
+                del data[selected_reference[0]]
 
-            with open(tool_file, "w") as file_handler:
-                json.dump(data, file_handler, indent=4)
-                file_handler.close()
+                with open(tool_file, "w") as file_handler:
+                    json.dump(data, file_handler, indent=4)
+                    file_handler.close()
+
+                print("Reference deleted.")
+                break
+            elif answer in ("n", "no"):
+                print("Operation cancelled.")
+                break
+            else:
+                print("Please answer with 'yes', 'no', 'y', or 'n'.")
 
     def run(self, args):
         self._tool_list = os.listdir(self._data_path)
