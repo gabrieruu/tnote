@@ -9,7 +9,7 @@ class Parser:
 
     def _register_arguments(self, parser, arguments):
         for short, long in arguments:
-            parser.add_argument(short, long)
+            parser.add_argument(short, long, required=True)
 
     def _register_subcommands(self, subparsers, subcommands_config):
         for subcmd_name, arguments in subcommands_config.items():
@@ -19,7 +19,7 @@ class Parser:
     def _register_commands(self, subparsers, config):
         for cmd_name, subcmds in config.items():
             cmd_parser = subparsers.add_parser(cmd_name)
-            cmd_subparsers = cmd_parser.add_subparsers(dest="subcommand")
+            cmd_subparsers = cmd_parser.add_subparsers(dest="subcommand", required=True)
             self._register_subcommands(cmd_subparsers, subcmds)
 
     def parse_args(self):
