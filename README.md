@@ -37,12 +37,6 @@ Install as a python package:
 pip install .
 ```
 
-Run tnote:
-
-```bash
-tnote -h
-```
-
 ## Usage
 
 Run tnote:
