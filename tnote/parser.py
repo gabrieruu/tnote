@@ -19,7 +19,11 @@ class Parser:
     def _register_commands(self, subparsers, config):
         for cmd_name, subcmds in config.items():
             cmd_parser = subparsers.add_parser(cmd_name)
-            cmd_subparsers = cmd_parser.add_subparsers(dest="subcommand", required=True)
+            cmd_subparsers = None
+            if subcmds:
+                cmd_subparsers = cmd_parser.add_subparsers(
+                    dest="subcommand", required=True
+                )
             self._register_subcommands(cmd_subparsers, subcmds)
 
     def parse_args(self):

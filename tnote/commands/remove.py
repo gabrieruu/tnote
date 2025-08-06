@@ -2,6 +2,7 @@ from tnote.commands.base import BaseCommand
 
 import os
 import json
+import sys
 from pyfzf import FzfPrompt
 
 
@@ -16,6 +17,9 @@ class RemoveCommand(BaseCommand):
 
     def _get_selected_tool_path(self):
         selected_tool = self.pyfzf.prompt(self._tool_list)
+        if not selected_tool:
+            sys.exit()
+
         tool_file = self._get_tool_file_path(selected_tool[0])
         return tool_file
 
@@ -38,6 +42,8 @@ class RemoveCommand(BaseCommand):
 
         reference_list = [key for key in data]
         selected_reference = self.pyfzf.prompt(reference_list)
+        if not selected_reference:
+            sys.exit()
 
         answer = input(
             f"You are going to delete reference title {selected_reference} in tool file {tool_file}, are you sure?(yes)(no): "
