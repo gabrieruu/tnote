@@ -2,10 +2,20 @@ import argparse
 
 
 class Parser:
-    def __init__(self, config):
+    """
+    Parses CLI commands and subcommands for the `tnote` tool using argparse.
+
+    Commands, subcommands, and arguments are defined in the `CLI_CONFIG`
+    constant and dynamically registered via subparsers.
+
+    See: https://docs.python.org/3/library/argparse.html
+    """
+
+    def __init__(self, cli_config):
         self.parser = argparse.ArgumentParser()
         subparsers = self.parser.add_subparsers(dest="command")
-        self._register_commands(subparsers, config)
+
+        self._register_commands(subparsers, cli_config)
 
     def _register_arguments(self, parser, arguments):
         for short, long in arguments:
@@ -19,12 +29,12 @@ class Parser:
     def _register_commands(self, subparsers, config):
         for cmd_name, subcmds in config.items():
             cmd_parser = subparsers.add_parser(cmd_name)
-            cmd_subparsers = None
+
             if subcmds:
                 cmd_subparsers = cmd_parser.add_subparsers(
                     dest="subcommand", required=True
                 )
-            self._register_subcommands(cmd_subparsers, subcmds)
+                self._register_subcommands(cmd_subparsers, subcmds)
 
     def parse_args(self):
         return self.parser.parse_args()

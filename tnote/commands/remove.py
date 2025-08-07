@@ -7,80 +7,67 @@ from pyfzf import FzfPrompt
 
 
 class RemoveCommand(BaseCommand):
+    """Handles the 'remove' command for tnote.
+
+    Supports deleting either an entire tool file or a specific reference within it.
+    Uses an interactive fuzzy finder (fzf) to select targets.
+    """
+
+    _pyfzf = FzfPrompt()
+
     def __init__(self):
         self._subcommand_registry = {
             "tool": self._remove_tool,
             "reference": self._remove_reference,
         }
 
-        self.pyfzf = FzfPrompt()
-
-    def _get_selected_tool_path(self):
-        selected_tool = self.pyfzf.prompt(self._tool_list)
-        if not selected_tool:
-            sys.exit()
-
-        tool_file = self._get_tool_file_path(selected_tool[0])
-        return tool_file
-
-    def _remove_tool(self, args):
-        tool_file = self._get_selected_tool_path()
-
+    def _confirm(self, message):
         while True:
-            if os.path.exists(tool_file):
-                answer = (
-                    input(
-                        f'You are about to delete tool file "{tool_file}".\nDo you want to continue? [Y/n] '
-                    )
-                    .strip()
-                    .lower()
-                )
-                if answer in ("", "y", "yes"):
-                    os.remove(tool_file)
-                    print("Tool file deleted.")
-                    break
-                elif answer in ("n", "no"):
-                    print("Operation cancelled.")
-                    break
-                else:
-                    print("Please answer with 'yes', 'no', 'y', or 'n'.")
-
-    def _remove_reference(self, args):
-        tool_file = self._get_selected_tool_path()
-
-        with open(tool_file, "r") as file_handler:
-            data = json.load(file_handler)
-            file_handler.close()
-
-        reference_list = [key for key in data]
-        selected_reference = self.pyfzf.prompt(reference_list)
-        if not selected_reference:
-            sys.exit()
-
-        while True:
-            answer = (
-                input(
-                    f"You are about to delete reference title '{selected_reference}' in tool file '{tool_file}'.\nDo you want to continue? [Y/n] "
-                )
-                .strip()
-                .lower()
-            )
+            answer = input(f"{message} [Y/n]").strip().lower()
             if answer in ("", "y", "yes"):
-                del data[selected_reference[0]]
-
-                with open(tool_file, "w") as file_handler:
-                    json.dump(data, file_handler, indent=4)
-                    file_handler.close()
-
-                print("Reference deleted.")
-                break
+                return True
             elif answer in ("n", "no"):
-                print("Operation cancelled.")
-                break
+                return False
             else:
                 print("Please answer with 'yes', 'no', 'y', or 'n'.")
 
+    def _remove_tool(self):
+        message = f"You are about to delete tool file '{self._tool_file}'.\nDo you want to continue?"
+
+        if self._confirm(message):
+            os.remove(self._tool_file)
+            print("Tool file deleted.")
+        else:
+            print("Operation cacelled.")
+
+    def _remove_reference(self):
+        reference_list = list(self._data.keys())
+
+        selected_reference = self._pyfzf.prompt(reference_list)
+        if not selected_reference:
+            sys.exit()
+
+        message = f"You are about to delete reference {selected_reference} in tool '{self._selected_tool[0]}'."
+
+        if self._confirm(message):
+            del self._data[selected_reference[0]]
+            with open(self._tool_file, "w") as file_handler:
+                json.dump(self._data, file_handler, indent=4)
+
+            print("Reference deleted.")
+        else:
+            print("Operation cancelled.")
+
     def run(self, args):
-        self._tool_list = os.listdir(self._data_path)
-        self._tool_list = [tool.replace(".json", "") for tool in self._tool_list]
-        self._subcommand_registry[args.subcommand](args)
+        tool_list = [tool.replace(".json", "") for tool in os.listdir(self._data_path)]
+
+        self._selected_tool = self._pyfzf.prompt(tool_list)
+        if not self._selected_tool:
+            sys.exit()
+
+        self._tool_file = self._get_tool_file_path(self._selected_tool[0])
+
+        with open(self._tool_file, "r") as file_handler:
+            self._data = json.load(file_handler)
+
+        self._subcommand_registry[args.subcommand]()

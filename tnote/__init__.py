@@ -25,6 +25,7 @@ CLI_CONFIG = {
 
 def main():
     init_config()
+
     parser = Parser(CLI_CONFIG)
     args = parser.parse_args()
 

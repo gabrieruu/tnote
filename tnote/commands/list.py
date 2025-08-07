@@ -7,14 +7,16 @@ from pyfzf import FzfPrompt
 
 
 class ListCommand(BaseCommand):
-    def __init__(self) -> None:
-        pass
+    """Lists available tools and references.
+
+    Uses fuzzy finder (`pyfzf`) to prompt the user to select a tool and then
+    a reference within that tool, printing the selected reference content.
+    """
 
     def run(self, args):
         pyfzf = FzfPrompt()
 
-        tool_list = os.listdir(self._data_path)
-        tool_list = [tool.replace(".json", "") for tool in tool_list]
+        tool_list = [tool.replace(".json", "") for tool in os.listdir(self._data_path)]
 
         selected_tool = pyfzf.prompt(tool_list)
         if not selected_tool:
@@ -24,9 +26,9 @@ class ListCommand(BaseCommand):
 
         with open(tool_file, "r") as file_handler:
             data = json.load(file_handler)
-            file_handler.close()
 
-        reference_list = [key for key in data]
+        reference_list = list(data.keys())
+
         selected_reference = pyfzf.prompt(reference_list)
         if not selected_reference:
             sys.exit()
