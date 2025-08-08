@@ -2,6 +2,8 @@ import os
 import json
 import sys
 
+from argparse import Namespace
+
 from tnote.commands.base import BaseCommand
 
 
@@ -46,7 +48,7 @@ class AddCommand(BaseCommand):
         with open(self._tool_file, "w") as file_handler:
             file_handler.write(json.dumps({}))
 
-    def run(self, args):
+    def run(self, args: Namespace) -> None:
         if hasattr(args, "tool"):
             self._tool_file = self._get_tool_file_path(args.tool)
         else:

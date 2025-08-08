@@ -23,11 +23,11 @@ class Parser:
 
     def _register_subcommands(self, subparsers, subcommands_config):
         for subcmd_name, arguments in subcommands_config.items():
-            subparser = subparsers.add_parser(subcmd_name)
-            self._register_arguments(subparser, arguments)
+            parser = subparsers.add_parser(subcmd_name)
+            self._register_arguments(parser, arguments)
 
-    def _register_commands(self, subparsers, config):
-        for cmd_name, subcmds in config.items():
+    def _register_commands(self, subparsers, cli_config):
+        for cmd_name, subcmds in cli_config.items():
             cmd_parser = subparsers.add_parser(cmd_name)
 
             if subcmds:
@@ -36,8 +36,8 @@ class Parser:
                 )
                 self._register_subcommands(cmd_subparsers, subcmds)
 
-    def parse_args(self):
+    def parse_args(self) -> argparse.Namespace:
         return self.parser.parse_args()
 
-    def print_help(self):
+    def print_help(self) -> None:
         return self.parser.print_help()

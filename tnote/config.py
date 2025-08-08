@@ -6,42 +6,33 @@ from pathlib import Path
 APP_NAME = "tnote"
 AUTHOR = "tnote"
 
-data_dir = Path(user_data_dir(APP_NAME, AUTHOR)) / "data"
-data_dir.mkdir(parents=True, exist_ok=True)
+_data_dir = Path(user_data_dir(APP_NAME, AUTHOR)) / "data"
+_data_dir.mkdir(parents=True, exist_ok=True)
 
-config_dir = Path(user_config_dir(APP_NAME, AUTHOR)) / "config"
-config_dir.mkdir(parents=True, exist_ok=True)
-config_file_path = config_dir / "settings.ini"
+_config_dir = Path(user_config_dir(APP_NAME, AUTHOR)) / "config"
+_config_dir.mkdir(parents=True, exist_ok=True)
+_config_file_path = _config_dir / "settings.ini"
 
 
-def init_config():
-    """
-    Create a config file
-    """
+def init_config() -> None:
     config = configparser.ConfigParser()
     config.add_section("Settings")
-    config.set("Settings", "data_path", str(data_dir))
+    config.set("Settings", "data_path", str(_data_dir))
 
-    with open(config_file_path, "w") as config_file:
+    with open(_config_file_path, "w") as config_file:
         config.write(config_file)
 
 
-def get_config():
-    """
-    Returns the config object
-    """
-    if not os.path.exists(config_file_path):
+def _get_config():
+    if not os.path.exists(_config_file_path):
         init_config()
 
     config = configparser.ConfigParser()
-    config.read(config_file_path)
+    config.read(_config_file_path)
     return config
 
 
-def get_setting(section, setting):
-    """
-    Print out a setting
-    """
-    config = get_config()
+def get_setting(section: str, setting: str) -> str:
+    config = _get_config()
     value = config.get(section, setting)
     return value

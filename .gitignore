@@ -1,8 +1,9 @@
-Makefile
+# User related
+todos.json
+
+# Python related
+build
+.venv
 requirements.txt
-sandbox/
 tnote.egg-info
 __pycache__
-old_*
-todos.json
-build

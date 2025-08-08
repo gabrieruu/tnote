@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from tnote.config import get_setting
 from pathlib import Path
 
@@ -11,7 +13,8 @@ class BaseCommand:
     Each subclass must implement the `run` method.
     """
 
-    registry = {}
+    _data_path: str
+    registry: dict[str, BaseCommand] = {}
 
     def __init_subclass__(cls):
         name = cls.__name__.lower().replace("command", "")

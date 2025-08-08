@@ -9,3 +9,11 @@ dependencies = ["pyfzf", "platformdirs"]
 
 [project.scripts]
 tnote = "tnote:main"
+
+[[tool.mypy.overrides]]
+module = ["platformdirs.*"]
+follow_untyped_imports = true
+
+[[tool.mypy.overrides]]
+module = ["pyfzf.*"]
+follow_untyped_imports = true

@@ -1,3 +1,4 @@
+from argparse import Namespace
 from tnote.commands.base import BaseCommand
 
 import os
@@ -13,7 +14,7 @@ class ListCommand(BaseCommand):
     a reference within that tool, printing the selected reference content.
     """
 
-    def run(self, args):
+    def run(self, args: Namespace) -> None:
         pyfzf = FzfPrompt()
 
         tool_list = [tool.replace(".json", "") for tool in os.listdir(self._data_path)]
