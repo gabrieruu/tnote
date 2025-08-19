@@ -99,4 +99,52 @@ Examples:
 Use the format `<type>: <description>` in your commit messages. For larger changes, consider adding a scope like `<type>(parser): <description>`.
 
 ### Local Development
-WIP
+
+To set up your local development environment, use the containerized development setup:
+
+#### Prerequisites
+
+- [Docker](https://www.docker.com/get-started)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+- [Make](https://www.gnu.org/software/make/) (usually pre-installed on Unix systems)
+
+#### Development Environment Setup
+
+Run the development environment:
+
+```bash
+make dev
+```
+
+This command will:
+1. Build a Docker container with Python and all necessary dependencies (including `fzf`)
+2. Mount your project directory to `/home/dev/tnote` inside the container
+3. Install the project in editable mode using `pip install -e .`
+4. Drop you into an interactive bash shell within the container
+
+Once inside the container, you can:
+- Run `tnote` commands directly
+- Make changes to the code (changes are reflected immediately due to editable install)
+- Run tests and other development tasks
+
+#### Other Development Commands
+
+Format code:
+```bash
+make fmt
+```
+
+Run type checking:
+```bash
+make mypy
+```
+
+Clean test data:
+```bash
+make cleanse
+```
+
+Populate test data:
+```bash
+make populate
+```
